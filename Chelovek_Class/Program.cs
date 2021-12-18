@@ -5,15 +5,18 @@ namespace Chelovek_Class
 {
     public delegate void Smert(string message);
     public delegate void Jump(string message);
+        public delegate void Organ(string message);
     class Program
     {
         static void Main(string[] args)
         {
             //Как мне выводить его имя возратс и т.п. на CW?
             Chelovek Sasha = new Chelovek("Sasha", 18, true, 2, 2, "Krutoi", "Brown", "Black", "Black",new RightHand(),new LeftHand(),new RightFoot(),new LeftFoot());
+            
             Sasha.Dead();
             Sasha.Sleep();
             Console.WriteLine(Sasha.righthand);
+            Console.WriteLine(Sasha);
         }
     }
     public class Chelovek
@@ -31,12 +34,18 @@ namespace Chelovek_Class
         int minuta = 3600;
         Smert smert = Console.WriteLine;
         Jump jump = Console.WriteLine;
+        readonly public Hearth hearth;
         readonly public Ihand righthand;
         readonly public Ihand lefthand;
         readonly public Ifoot LeftFoot;
         readonly public Ifoot RightFoot;
-        public Chelovek(string name,int age,bool man_or_woman, int hand,int foot,string build,string hair_color,string eyes_color,string skin_color,Ihand righthand = null,Ihand lefthand= null,Ifoot LeftFoot = null, Ifoot RightFoot = null)
+        public override string ToString()
         {
+            return $"{name} ";
+        }
+        public Chelovek(string name, int age, bool man_or_woman, int hand, int foot, string build, string hair_color, string eyes_color, string skin_color, Ihand righthand = null, Ihand lefthand = null, Ifoot LeftFoot = null, Ifoot RightFoot = null)
+        {
+            hearth.Start();
             this.age = age;
             this.build = build;
             this.eyes_color = eyes_color;
@@ -48,6 +57,7 @@ namespace Chelovek_Class
             this.skin_color = skin_color;
             this.righthand = righthand;
             this.lefthand = lefthand;
+            this.hearth = new Hearth(Console.WriteLine);
         }
         public Chelovek()
         {
@@ -73,7 +83,9 @@ namespace Chelovek_Class
         }
         public void Dead()
         {
+            
             smert("Братан ты умер:( Твой возраст:" + " " + age + "лет");
+            hearth.Stop();
         }
         public double Run()
         {
@@ -161,5 +173,29 @@ namespace Chelovek_Class
         {
             return $"Длина вашей правой руки: {Dlina} и количество пальцев {Fingers} и {Hand_Brush} в норме:)";
         }
+    }
+   public abstract class Organs
+    {
+       protected string nameorgan { get; set; }
+       protected string properties { get; set; }
+       protected Organ org;
+        public void Start()
+        {
+            org($"Орган { nameorgan} начал свою работу:)");
+        }
+        public void Stop()
+        {
+            org($"Орган { nameorgan} умер:(");
+        }
+    }
+    public class Hearth : Organs
+    {
+        public Hearth(Organ org)
+        {
+            nameorgan = "Сердце:)";
+            properties = "Качает кровь!";
+            this.org = org;
+        }
+
     }
 }
